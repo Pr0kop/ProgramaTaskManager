@@ -1,0 +1,9 @@
+controllers:
+    resource:
+        path: ../src/Infrastructure/
+        namespace: App\Infrastructure
+    type: attribute
+
+graphql:
+    resource: '@OverblogGraphQLBundle/Resources/config/routing/graphql.yml'
+    prefix: /graphql

@@ -1,0 +1,16 @@
+parameters:
+    json_placeholder_url: 'https://jsonplaceholder.typicode.com'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Domain/*/Entity/'
+            - '../src/Domain/*/Event/'
+            - '../src/Domain/*/ValueObject/'
+            - '../src/Kernel.php'
