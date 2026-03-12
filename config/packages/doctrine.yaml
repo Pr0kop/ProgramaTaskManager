@@ -14,7 +14,7 @@ doctrine:
             App:
                 type: attribute
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Infrastructure'
-                prefix: 'App\Infrastructure'
+                dir: '%kernel.project_dir%/src'
+                prefix: 'App'
                 alias: App
 

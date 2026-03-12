@@ -14,3 +14,6 @@ services:
             - '../src/Domain/*/Event/'
             - '../src/Domain/*/ValueObject/'
             - '../src/Kernel.php'
+
+    App\Domain\User\Repository\UserRepositoryInterface:
+        alias: App\Infrastructure\User\Persistence\DoctrineUserRepository
