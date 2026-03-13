@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Logowanie — TaskManager{% endblock %}
+
+{% block styles %}
+.login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+}
+.login-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 16px 16px 0 0;
+    padding: 2rem;
+    text-align: center;
+}
+.login-header .logo {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -1px;
+}
+.login-header .subtitle {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.875rem;
+    margin-top: 4px;
+}
+.form-control:focus {
+    border-color: #1a1a2e;
+    box-shadow: 0 0 0 3px rgba(26,26,46,0.12);
+}
+.btn-login {
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+.btn-login:hover { opacity: 0.9; }
+.hint-box {
+    background: #f8f9fa;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+{% endblock %}
+
+{% block body %}
+<div class="login-wrapper">
+    <div class="login-card card">
+        <div class="login-header">
+            <div class="logo"><i class="bi bi-check2-square me-2"></i>TaskManager</div>
+            <div class="subtitle">Panel zarządzania zadaniami</div>
+        </div>
+
+        <div class="card-body p-4">
+            {% if error is defined and error %}
+                <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    {{ error }}
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{{ path('web_login_post') }}">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="bi bi-envelope text-muted"></i>
+                        </span>
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control border-start-0 ps-0"
+                            placeholder="email@example.com"
+                            required
+                            autofocus
+                        >
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold small">Hasło</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="bi bi-lock text-muted"></i>
+                        </span>
+                        <input
+                            type="password"
+                            name="password"
+                            class="form-control border-start-0 ps-0"
+                            placeholder="••••••••"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-login btn-primary w-100 text-white">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Zaloguj się
+                </button>
+            </form>
+
+            <div class="hint-box p-3 mt-4">
+                <div class="fw-semibold mb-1"><i class="bi bi-info-circle me-1"></i>Dane testowe</div>
+                <div><strong>Admin:</strong> sincere@april.biz</div>
+                <div><strong>Member:</strong> Sheldon@gmail.com (dowolny inny user)</div>
+                <div class="mt-1"><strong>Hasło:</strong> password123</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

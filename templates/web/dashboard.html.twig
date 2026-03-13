@@ -1,0 +1,414 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard — TaskManager{% endblock %}
+
+{% block styles %}
+:root {
+    --sidebar-w: 260px;
+    --dark: #1a1a2e;
+    --dark2: #16213e;
+}
+.sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: linear-gradient(180deg, var(--dark) 0%, var(--dark2) 100%);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+.sidebar-brand {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar-brand .brand-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+}
+.sidebar-brand .brand-sub {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.user-card {
+    margin: 1rem;
+    background: rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 1rem;
+}
+.user-avatar {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; color: #fff; font-size: 1rem;
+    flex-shrink: 0;
+}
+.user-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.user-role-badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+.badge-admin {
+    background: rgba(253,126,20,0.2);
+    color: #fd7e14;
+}
+.badge-member {
+    background: rgba(13,202,240,0.2);
+    color: #0dcaf0;
+}
+.sidebar-nav {
+    padding: 0.5rem 1rem;
+    flex: 1;
+}
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: rgba(255,255,255,0.65);
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+.nav-item.active {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+}
+.sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+.main-content {
+    margin-left: var(--sidebar-w);
+    min-height: 100vh;
+    padding: 2rem;
+}
+.page-header {
+    margin-bottom: 1.5rem;
+}
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0;
+}
+.page-subtitle {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin: 0;
+}
+.stat-card {
+    background: #fff;
+    border-radius: 14px;
+    border: none;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    padding: 1.25rem 1.5rem;
+}
+.stat-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+}
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    line-height: 1;
+}
+.stat-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 2px;
+}
+.tasks-card {
+    background: #fff;
+    border-radius: 14px;
+    border: none;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.tasks-card .card-header {
+    background: none;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 1.25rem 1.5rem;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+.table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    font-weight: 600;
+    border-bottom-width: 1px;
+    padding: 0.75rem 1rem;
+}
+.table td {
+    vertical-align: middle;
+    padding: 0.875rem 1rem;
+    font-size: 0.875rem;
+}
+.table tbody tr:hover { background: #f8f9ff; }
+.status-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.status-todo {
+    background: rgba(255,193,7,0.15);
+    color: #997404;
+}
+.status-in_progress {
+    background: rgba(13,110,253,0.12);
+    color: #0d6efd;
+}
+.status-done {
+    background: rgba(25,135,84,0.12);
+    color: #198754;
+}
+.task-title {
+    font-weight: 600;
+    color: #1a1a2e;
+}
+.task-desc {
+    font-size: 0.78rem;
+    color: #6c757d;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 280px;
+}
+.empty-state {
+    padding: 4rem 2rem;
+    text-align: center;
+    color: #6c757d;
+}
+.empty-state i { font-size: 3rem; opacity: 0.3; }
+{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+
+    {# === SIDEBAR === #}
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-name"><i class="bi bi-check2-square me-2"></i>TaskManager</div>
+            <div class="brand-sub">Panel zarządzania</div>
+        </div>
+
+        <div class="user-card d-flex align-items-center gap-3">
+            <div class="user-avatar">{{ user.name|first|upper }}</div>
+            <div class="overflow-hidden">
+                <div class="user-name">{{ user.name }}</div>
+                <span class="user-role-badge {{ user.role.value == 'admin' ? 'badge-admin' : 'badge-member' }}">
+                    {{ user.role.value == 'admin' ? '⭐ Admin' : '👤 Member' }}
+                </span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-item active">
+                <i class="bi bi-list-task"></i>
+                {{ user.isAdmin() ? 'Wszystkie zadania' : 'Moje zadania' }}
+            </div>
+            <div class="nav-item">
+                <i class="bi bi-person"></i>
+                {{ user.username }}
+            </div>
+            <div class="nav-item">
+                <i class="bi bi-envelope"></i>
+                <span class="text-truncate">{{ user.email.value }}</span>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <form method="POST" action="{{ path('web_logout') }}">
+                <button type="submit" class="btn w-100 d-flex align-items-center gap-2 text-start"
+                        style="color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.06); border-radius: 10px; border: none;">
+                    <i class="bi bi-box-arrow-left"></i>
+                    Wyloguj się
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    {# === MAIN CONTENT === #}
+    <main class="main-content flex-grow-1">
+
+        {# Header #}
+        <div class="page-header d-flex justify-content-between align-items-start">
+            <div>
+                <h1 class="page-title">
+                    {{ user.isAdmin() ? 'Wszystkie zadania' : 'Moje zadania' }}
+                </h1>
+                <p class="page-subtitle">
+                    {% if user.isAdmin() %}
+                        Widok administratora — pełna lista zadań w systemie
+                    {% else %}
+                        Zadania przypisane do Twojego konta
+                    {% endif %}
+                </p>
+            </div>
+            <div class="text-end text-muted small">
+                <i class="bi bi-clock me-1"></i>{{ "now"|date("d.m.Y H:i") }}
+            </div>
+        </div>
+
+        {# Stats row #}
+        {% set todoCount      = tasks|filter(t => t.status == 'todo')|length %}
+        {% set inProgressCount = tasks|filter(t => t.status == 'in_progress')|length %}
+        {% set doneCount      = tasks|filter(t => t.status == 'done')|length %}
+
+        <div class="row g-3 mb-4">
+            <div class="col-sm-6 col-lg-3">
+                <div class="stat-card d-flex align-items-center gap-3">
+                    <div class="stat-icon" style="background:#f0f4ff">
+                        <i class="bi bi-stack" style="color:#0d6efd"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value">{{ taskCount }}</div>
+                        <div class="stat-label">Wszystkich</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="stat-card d-flex align-items-center gap-3">
+                    <div class="stat-icon" style="background:#fffbec">
+                        <i class="bi bi-hourglass-split" style="color:#ffc107"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value">{{ todoCount }}</div>
+                        <div class="stat-label">Do zrobienia</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="stat-card d-flex align-items-center gap-3">
+                    <div class="stat-icon" style="background:#e8f0ff">
+                        <i class="bi bi-arrow-repeat" style="color:#0d6efd"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value">{{ inProgressCount }}</div>
+                        <div class="stat-label">W trakcie</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="stat-card d-flex align-items-center gap-3">
+                    <div class="stat-icon" style="background:#edfff5">
+                        <i class="bi bi-check2-all" style="color:#198754"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value">{{ doneCount }}</div>
+                        <div class="stat-label">Ukończone</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Tasks table #}
+        <div class="tasks-card card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-list-task me-2"></i>Lista zadań</span>
+                <span class="badge bg-secondary rounded-pill">{{ taskCount }}</span>
+            </div>
+
+            {% if tasks is empty %}
+                <div class="empty-state">
+                    <i class="bi bi-inbox d-block mb-3"></i>
+                    <p class="mb-0 fw-semibold">Brak zadań</p>
+                    <p class="small">
+                        {% if user.isAdmin() %}
+                            W systemie nie ma jeszcze żadnych zadań.
+                        {% else %}
+                            Nie masz jeszcze przypisanych żadnych zadań.
+                        {% endif %}
+                    </p>
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Zadanie</th>
+                                <th>Status</th>
+                                {% if user.isAdmin() %}
+                                    <th>Przypisany do</th>
+                                {% endif %}
+                                <th>Utworzono</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %}
+                                <tr>
+                                    <td>
+                                        <div class="task-title">{{ task.title }}</div>
+                                        {% if task.description %}
+                                            <div class="task-desc">{{ task.description }}</div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if task.status == 'todo' %}
+                                            <span class="status-badge status-todo">
+                                                <i class="bi bi-circle"></i> Do zrobienia
+                                            </span>
+                                        {% elseif task.status == 'in_progress' %}
+                                            <span class="status-badge status-in_progress">
+                                                <i class="bi bi-arrow-repeat"></i> W trakcie
+                                            </span>
+                                        {% else %}
+                                            <span class="status-badge status-done">
+                                                <i class="bi bi-check-circle-fill"></i> Ukończone
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    {% if user.isAdmin() %}
+                                        <td>
+                                            {% if task.assignedUser %}
+                                                <span class="d-flex align-items-center gap-2">
+                                                    <span class="rounded-circle bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center"
+                                                          style="width:28px;height:28px;font-size:0.75rem;font-weight:700;color:#495057">
+                                                        {{ task.assignedUser|first|upper }}
+                                                    </span>
+                                                    {{ task.assignedUser }}
+                                                </span>
+                                            {% else %}
+                                                <span class="text-muted small">— nieprzypisane</span>
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
+                                    <td class="text-muted small">
+                                        <i class="bi bi-calendar3 me-1"></i>{{ task.createdAt }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+
+    </main>
+</div>
+{% endblock %}

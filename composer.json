@@ -24,6 +24,7 @@
         "symfony/password-hasher": "7.*",
         "symfony/runtime": "7.*",
         "symfony/security-bundle": "7.*",
+        "symfony/twig-bundle": "7.*",
         "symfony/uid": "7.*",
         "symfony/yaml": "7.*"
     },
