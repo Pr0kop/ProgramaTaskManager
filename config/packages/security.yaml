@@ -1,0 +1,32 @@
+security:
+    password_hashers:
+        App\Domain\User\Entity\User:
+            algorithm: bcrypt
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Domain\User\Entity\User
+                property: apiToken
+
+    firewalls:
+        dev:
+            pattern: ^/(_profiler|_wdt|assets|build)/
+            security: false
+        login:
+            pattern: ^/api/login
+            security: false
+        main:
+            lazy: true
+            provider: app_user_provider
+            custom_authenticators:
+                - App\Infrastructure\User\Security\ApiTokenAuthenticator
+
+    access_control: []
+
+when@test:
+    security:
+        password_hashers:
+            App\Domain\User\Entity\User:
+                algorithm: bcrypt
+                cost: 4

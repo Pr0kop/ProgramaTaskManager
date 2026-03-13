@@ -41,6 +41,28 @@ final class UserController extends AbstractController
         ));
     }
 
+    #[Route('/me', methods: ['GET'])]
+    public function me(): JsonResponse
+    {
+        /** @var \App\Domain\User\Entity\User $user */
+        $user = $this->getUser();
+
+        if ($user === null) {
+            return $this->json(['error' => 'Unauthorized'], 401);
+        }
+
+        return $this->json([
+            'id'         => $user->getId()->value,
+            'externalId' => $user->getExternalId(),
+            'name'       => $user->getName(),
+            'username'   => $user->getUsername(),
+            'email'      => $user->getEmail()->value,
+            'role'       => $user->getRole()->value,
+            'phone'      => $user->getPhone(),
+            'website'    => $user->getWebsite(),
+        ]);
+    }
+
     #[Route('/{id}', methods: ['GET'])]
     public function get(string $id): JsonResponse
     {

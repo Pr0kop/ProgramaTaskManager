@@ -20,6 +20,10 @@ services:
     App\Domain\User\Repository\UserRepositoryInterface:
         alias: App\Infrastructure\User\Persistence\DoctrineUserRepository
 
+    App\Application\User\Handler\ImportUsersHandler:
+        arguments:
+            $defaultUserPassword: '%env(DEFAULT_USER_PASSWORD)%'
+
     # Task aggregate
     App\Domain\Task\Repository\TaskRepositoryInterface:
         alias: App\Infrastructure\Task\Persistence\DoctrineTaskRepository

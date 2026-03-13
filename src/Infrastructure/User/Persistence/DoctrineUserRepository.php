@@ -39,6 +39,11 @@ final class DoctrineUserRepository extends ServiceEntityRepository implements Us
         return $this->findOneBy(['email' => $email->value]);
     }
 
+    public function findByApiToken(string $token): ?User
+    {
+        return $this->findOneBy(['apiToken' => $token]);
+    }
+
     public function findAll(): array
     {
         return parent::findAll();

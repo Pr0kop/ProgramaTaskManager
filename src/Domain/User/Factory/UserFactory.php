@@ -11,17 +11,22 @@ use App\Domain\User\ValueObject\UserId;
 
 final class UserFactory
 {
-    public function createFromJsonPlaceholder(array $data): User
+    public function createFromJsonPlaceholder(array $data, string $hashedPassword, string $apiToken, UserRole $role = UserRole::Member): User
     {
-        return new User(
+        $user = new User(
             id:         UserId::generate(),
             name:       $data['name'],
             username:   $data['username'],
             email:      Email::fromString($data['email']),
-            role:       UserRole::Member,
+            role:       $role,
             externalId: $data['id'],
             phone:      $data['phone'] ?? null,
             website:    $data['website'] ?? null,
         );
+
+        $user->setPassword($hashedPassword);
+        $user->setApiToken($apiToken);
+
+        return $user;
     }
 }

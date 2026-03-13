@@ -18,6 +18,8 @@ interface UserRepositoryInterface
 
     public function findByEmail(Email $email): ?User;
 
+    public function findByApiToken(string $token): ?User;
+
     /** @return User[] */
     public function findAll(): array;
 }
