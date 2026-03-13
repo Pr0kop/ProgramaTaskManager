@@ -2,6 +2,8 @@ doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
         profiling_collect_backtrace: '%kernel.debug%'
+        types:
+            email: App\Infrastructure\User\Doctrine\Type\EmailType
 
     orm:
         auto_generate_proxy_classes: true

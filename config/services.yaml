@@ -11,6 +11,7 @@ services:
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Domain/*/Entity/'
+            - '../src/Domain/*/Enum/'
             - '../src/Domain/*/Event/'
             - '../src/Domain/*/ValueObject/'
             - '../src/Kernel.php'
