@@ -14,4 +14,6 @@ framework:
             failed:
                 dsn: 'doctrine://default?queue_name=failed'
 
-        routing: []
+        routing:
+            App\Domain\Task\Event\TaskCreatedEvent:       async
+            App\Domain\Task\Event\TaskStatusUpdatedEvent: async

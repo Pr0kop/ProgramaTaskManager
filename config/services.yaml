@@ -16,5 +16,25 @@ services:
             - '../src/Domain/*/ValueObject/'
             - '../src/Kernel.php'
 
+    # User aggregate
     App\Domain\User\Repository\UserRepositoryInterface:
         alias: App\Infrastructure\User\Persistence\DoctrineUserRepository
+
+    # Task aggregate
+    App\Domain\Task\Repository\TaskRepositoryInterface:
+        alias: App\Infrastructure\Task\Persistence\DoctrineTaskRepository
+
+    App\Domain\Task\EventStore\EventStoreInterface:
+        alias: App\Infrastructure\Task\Persistence\DoctrineEventStore
+
+    # Strategy Pattern - tag all transition strategies
+    App\Domain\Task\Strategy\ToInProgressStrategy:
+        tags: ['app.task_status_transition_strategy']
+
+    App\Domain\Task\Strategy\ToDoneStrategy:
+        tags: ['app.task_status_transition_strategy']
+
+    # Inject tagged strategies into UpdateTaskStatusHandler
+    App\Application\Task\Handler\UpdateTaskStatusHandler:
+        arguments:
+            $strategies: !tagged_iterator app.task_status_transition_strategy
