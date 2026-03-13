@@ -1,0 +1,31 @@
+TaskType:
+    type: object
+    config:
+        description: "A task in the system"
+        fields:
+            id:
+                type: "String!"
+                description: "UUID of the task"
+                resolve: "@=value.getId().value"
+            title:
+                type: "String!"
+            description:
+                type: "String!"
+            status:
+                type: "String!"
+                description: "todo, in_progress or done"
+                resolve: "@=value.getStatus().value"
+            assignedUserId:
+                type: "String"
+                description: "UUID of the assigned user (nullable)"
+                resolve: "@=value.getAssignedUserId() ? value.getAssignedUserId().value : null"
+            assignedUser:
+                type: "UserType"
+                description: "Full user object resolved from assignedUserId"
+                resolve: "@=service('app.graphql.task_resolver').resolveAssignedUser(value)"
+            createdAt:
+                type: "String!"
+                resolve: "@=value.getCreatedAt().format('c')"
+            updatedAt:
+                type: "String!"
+                resolve: "@=value.getUpdatedAt().format('c')"

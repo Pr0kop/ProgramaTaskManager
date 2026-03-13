@@ -1,0 +1,27 @@
+UserType:
+    type: object
+    config:
+        description: "A user imported from JSONPlaceholder"
+        fields:
+            id:
+                type: "String!"
+                description: "UUID of the user"
+                resolve: "@=value.getId().value"
+            externalId:
+                type: "Int"
+                description: "Original ID from JSONPlaceholder"
+            name:
+                type: "String!"
+            username:
+                type: "String!"
+            email:
+                type: "String!"
+                resolve: "@=value.getEmail().value"
+            role:
+                type: "String!"
+                description: "admin or member"
+                resolve: "@=value.getRole().value"
+            phone:
+                type: "String"
+            website:
+                type: "String"

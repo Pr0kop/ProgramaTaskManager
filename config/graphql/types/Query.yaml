@@ -1,0 +1,46 @@
+Query:
+    type: object
+    config:
+        description: "Root query type"
+        fields:
+            users:
+                type: "[UserType!]!"
+                description: "List all users"
+                resolve: "@=service('app.graphql.user_resolver').resolveList()"
+
+            user:
+                type: "UserType"
+                description: "Get a single user by UUID"
+                args:
+                    id:
+                        type: "String!"
+                resolve: "@=service('app.graphql.user_resolver').resolveItem(args['id'])"
+
+            tasks:
+                type: "[TaskType!]!"
+                description: "List all tasks"
+                resolve: "@=service('app.graphql.task_resolver').resolveList()"
+
+            task:
+                type: "TaskType"
+                description: "Get a single task by UUID"
+                args:
+                    id:
+                        type: "String!"
+                resolve: "@=service('app.graphql.task_resolver').resolveItem(args['id'])"
+
+            tasksByUser:
+                type: "[TaskType!]!"
+                description: "List tasks assigned to a specific user"
+                args:
+                    userId:
+                        type: "String!"
+                resolve: "@=service('app.graphql.task_resolver').resolveByUser(args['userId'])"
+
+            taskHistory:
+                type: "[TaskEventType!]!"
+                description: "Event history for a task"
+                args:
+                    id:
+                        type: "String!"
+                resolve: "@=service('app.graphql.task_resolver').resolveHistory(args['id'])"

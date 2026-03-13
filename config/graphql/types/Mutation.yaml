@@ -1,0 +1,28 @@
+Mutation:
+    type: object
+    config:
+        description: "Root mutation type"
+        fields:
+            createTask:
+                type: "TaskType!"
+                description: "Create a new task"
+                args:
+                    title:
+                        type: "String!"
+                    description:
+                        type: "String"
+                        defaultValue: ""
+                    assignedUserId:
+                        type: "String"
+                        defaultValue: null
+                resolve: "@=service('app.graphql.task_resolver').createTask(args)"
+
+            updateTaskStatus:
+                type: "TaskType!"
+                description: "Update task status (todo -> in_progress -> done)"
+                args:
+                    id:
+                        type: "String!"
+                    status:
+                        type: "String!"
+                resolve: "@=service('app.graphql.task_resolver').updateTaskStatus(args)"

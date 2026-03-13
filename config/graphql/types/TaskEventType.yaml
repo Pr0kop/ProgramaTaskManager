@@ -1,0 +1,16 @@
+TaskEventType:
+    type: object
+    config:
+        description: "A stored event from the Event Store"
+        fields:
+            eventType:
+                type: "String!"
+                description: "e.g. TaskCreatedEvent or TaskStatusUpdatedEvent"
+            payload:
+                type: "String!"
+                description: "JSON-encoded event data"
+                resolve: "@=service('app.graphql.task_resolver').resolveEventPayload(value)"
+            occurredAt:
+                type: "String!"
+                description: "ISO 8601 timestamp"
+                resolve: "@=value.getOccurredAt().format('c')"

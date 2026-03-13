@@ -42,3 +42,12 @@ services:
     App\Application\Task\Handler\UpdateTaskStatusHandler:
         arguments:
             $strategies: !tagged_iterator app.task_status_transition_strategy
+
+    # GraphQL resolvers — must be public (fetched by alias from container at runtime)
+    app.graphql.user_resolver:
+        class: App\Infrastructure\GraphQL\Resolver\UserResolver
+        public: true
+
+    app.graphql.task_resolver:
+        class: App\Infrastructure\GraphQL\Resolver\TaskResolver
+        public: true
