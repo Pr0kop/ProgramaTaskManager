@@ -6,6 +6,7 @@ namespace App\Domain\User\Entity;
 
 use App\Domain\User\Enum\UserRole;
 use App\Domain\User\ValueObject\Email;
+use App\Domain\User\ValueObject\UserId;
 use App\Infrastructure\User\Persistence\DoctrineUserRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,8 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
 class User
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'string', length: 36)]
-    private string $id;
+    #[ORM\Column(type: 'user_id', length: 36)]
+    private UserId $id;
 
     #[ORM\Column(name: 'external_id', type: 'integer', unique: true, nullable: true)]
     private ?int $externalId;
@@ -42,7 +43,7 @@ class User
     private \DateTimeImmutable $createdAt;
 
     public function __construct(
-        string $id,
+        UserId $id,
         string $name,
         string $username,
         Email $email,
@@ -70,7 +71,7 @@ class User
         $this->createdAt  = new \DateTimeImmutable();
     }
 
-    public function getId(): string
+    public function getId(): UserId
     {
         return $this->id;
     }

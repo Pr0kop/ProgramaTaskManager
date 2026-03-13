@@ -3,7 +3,8 @@ doctrine:
         url: '%env(resolve:DATABASE_URL)%'
         profiling_collect_backtrace: '%kernel.debug%'
         types:
-            email: App\Infrastructure\User\Doctrine\Type\EmailType
+            email:   App\Infrastructure\User\Doctrine\Type\EmailType
+            user_id: App\Infrastructure\User\Doctrine\Type\UserIdType
 
     orm:
         auto_generate_proxy_classes: true
@@ -19,4 +20,3 @@ doctrine:
                 dir: '%kernel.project_dir%/src'
                 prefix: 'App'
                 alias: App
-

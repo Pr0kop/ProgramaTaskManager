@@ -7,14 +7,14 @@ namespace App\Domain\User\Factory;
 use App\Domain\User\Entity\User;
 use App\Domain\User\Enum\UserRole;
 use App\Domain\User\ValueObject\Email;
-use Symfony\Component\Uid\Uuid;
+use App\Domain\User\ValueObject\UserId;
 
 final class UserFactory
 {
     public function createFromJsonPlaceholder(array $data): User
     {
         return new User(
-            id:         Uuid::v4()->toRfc4122(),
+            id:         UserId::generate(),
             name:       $data['name'],
             username:   $data['username'],
             email:      Email::fromString($data['email']),

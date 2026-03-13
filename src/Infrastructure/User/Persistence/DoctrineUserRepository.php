@@ -6,10 +6,12 @@ namespace App\Infrastructure\User\Persistence;
 
 use App\Domain\User\Entity\User;
 use App\Domain\User\Repository\UserRepositoryInterface;
+use App\Domain\User\ValueObject\Email;
+use App\Domain\User\ValueObject\UserId;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class DoctrineUserRepository extends ServiceEntityRepository implements UserRepositoryInterface
+final class DoctrineUserRepository extends ServiceEntityRepository implements UserRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -22,9 +24,9 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
         $this->getEntityManager()->flush();
     }
 
-    public function findById(string $id): ?User
+    public function findById(UserId $id): ?User
     {
-        return $this->find($id);
+        return $this->find($id->value);
     }
 
     public function findByExternalId(int $externalId): ?User
@@ -32,9 +34,9 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
         return $this->findOneBy(['externalId' => $externalId]);
     }
 
-    public function findByEmail(string $email): ?User
+    public function findByEmail(Email $email): ?User
     {
-        return $this->findOneBy(['email' => $email]);
+        return $this->findOneBy(['email' => $email->value]);
     }
 
     public function findAll(): array

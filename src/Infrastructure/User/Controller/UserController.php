@@ -6,6 +6,7 @@ namespace App\Infrastructure\User\Controller;
 
 use App\Application\User\Command\ImportUsersCommand;
 use App\Domain\User\Repository\UserRepositoryInterface;
+use App\Domain\User\ValueObject\UserId;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -27,7 +28,7 @@ final class UserController extends AbstractController
 
         return $this->json(array_map(
             fn ($user) => [
-                'id'         => $user->getId(),
+                'id'         => $user->getId()->value,
                 'externalId' => $user->getExternalId(),
                 'name'       => $user->getName(),
                 'username'   => $user->getUsername(),
@@ -43,14 +44,20 @@ final class UserController extends AbstractController
     #[Route('/{id}', methods: ['GET'])]
     public function get(string $id): JsonResponse
     {
-        $user = $this->userRepository->findById($id);
+        try {
+            $userId = UserId::fromString($id);
+        } catch (\InvalidArgumentException) {
+            return $this->json(['error' => 'Invalid user ID format'], 400);
+        }
+
+        $user = $this->userRepository->findById($userId);
 
         if ($user === null) {
             return $this->json(['error' => 'User not found'], 404);
         }
 
         return $this->json([
-            'id'         => $user->getId(),
+            'id'         => $user->getId()->value,
             'externalId' => $user->getExternalId(),
             'name'       => $user->getName(),
             'username'   => $user->getUsername(),
@@ -65,7 +72,7 @@ final class UserController extends AbstractController
     public function import(): JsonResponse
     {
         $envelope = $this->messageBus->dispatch(new ImportUsersCommand());
-        $stamp = $envelope->last(HandledStamp::class);
+        $stamp    = $envelope->last(HandledStamp::class);
         $imported = $stamp?->getResult() ?? 0;
 
         return $this->json([
