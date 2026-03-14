@@ -1,0 +1,348 @@
+{
+  "info": {
+    "name": "TaskManager API",
+    "description": "Kolekcja endpointów dla aplikacji TaskManager — zadanie rekrutacyjne Programa Software House.\n\n**Jak zacząć:**\n1. Zaimportuj kolekcję do Postmana\n2. Ustaw zmienną `baseUrl` na `http://localhost:8080`\n3. Wywołaj `POST /api/users/import` żeby zaimportować użytkowników\n4. Wywołaj `POST /api/login` i skopiuj token do zmiennej `token`",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "token", "value": "" },
+    { "key": "taskId", "value": "" },
+    { "key": "userId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) {",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "    pm.collectionVariables.set('userId', json.user.id);",
+                  "    console.log('Token saved:', json.token.substring(0, 20) + '...');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"sincere@april.biz\",\n    \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] },
+            "description": "Logowanie administratora (Bret). Token jest automatycznie zapisywany do zmiennej kolekcji `token`."
+          }
+        },
+        {
+          "name": "Login (Member)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) {",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "    pm.collectionVariables.set('userId', json.user.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"shanna@melissa.tv\",\n    \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] },
+            "description": "Logowanie zwykłego użytkownika (Antonette)."
+          }
+        },
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] },
+            "description": "Dane zalogowanego użytkownika. Wymaga tokenu w nagłówku Authorization."
+          }
+        },
+        {
+          "name": "Login — błędne hasło",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"sincere@april.biz\",\n    \"password\": \"zlehaslo\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] },
+            "description": "Powinien zwrócić 401 Unauthorized."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Import z JSONPlaceholder",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/users/import", "host": ["{{baseUrl}}"], "path": ["api", "users", "import"] },
+            "description": "Importuje 10 użytkowników z JSONPlaceholder. Pierwszy (externalId=1, Bret) dostaje rolę admin."
+          }
+        },
+        {
+          "name": "Lista użytkowników",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"] }
+          }
+        },
+        {
+          "name": "Szczegóły użytkownika",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "{{userId}}"]
+            },
+            "description": "Zmienna `userId` jest ustawiana automatycznie po zalogowaniu."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "Utwórz zadanie",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.id) {",
+                  "    pm.collectionVariables.set('taskId', json.id);",
+                  "    console.log('Task ID saved:', json.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Nowe zadanie\",\n    \"description\": \"Opis zadania\",\n    \"assignedUserId\": null\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/tasks", "host": ["{{baseUrl}}"], "path": ["api", "tasks"] },
+            "description": "Tworzy zadanie. ID nowego taska jest automatycznie zapisywane do zmiennej `taskId`."
+          }
+        },
+        {
+          "name": "Utwórz zadanie (z przypisanym userem)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Zadanie z userem\",\n    \"description\": \"Przypisane do użytkownika\",\n    \"assignedUserId\": \"{{userId}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/tasks", "host": ["{{baseUrl}}"], "path": ["api", "tasks"] }
+          }
+        },
+        {
+          "name": "Lista wszystkich zadań",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/tasks", "host": ["{{baseUrl}}"], "path": ["api", "tasks"] }
+          }
+        },
+        {
+          "name": "Zadania użytkownika",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/user/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks", "user", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Zmień status → in_progress",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"in_progress\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/{{taskId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks", "{{taskId}}", "status"]
+            },
+            "description": "todo → in_progress. Używa zmiennej `taskId`."
+          }
+        },
+        {
+          "name": "Zmień status → done",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"done\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/{{taskId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks", "{{taskId}}", "status"]
+            },
+            "description": "in_progress → done."
+          }
+        },
+        {
+          "name": "Zmień status — błędne przejście (422)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"done\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/{{taskId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks", "{{taskId}}", "status"]
+            },
+            "description": "Próba przejścia z todo → done. Powinien zwrócić 422 Unprocessable Entity."
+          }
+        },
+        {
+          "name": "Historia zadania (Event Store)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/{{taskId}}/history",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks", "{{taskId}}", "history"]
+            },
+            "description": "Zwraca listę zdarzeń z Event Store dla danego zadania."
+          }
+        }
+      ]
+    },
+    {
+      "name": "GraphQL",
+      "item": [
+        {
+          "name": "Query — Lista użytkowników",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"query\": \"{ users { id name username email role } }\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/graphql/graphql/default", "host": ["{{baseUrl}}"], "path": ["graphql", "graphql", "default"] }
+          }
+        },
+        {
+          "name": "Query — Lista zadań z userem",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"query\": \"{ tasks { id title status createdAt assignedUser { name email } } }\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/graphql/graphql/default", "host": ["{{baseUrl}}"], "path": ["graphql", "graphql", "default"] }
+          }
+        },
+        {
+          "name": "Query — Zadania użytkownika",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"query\": \"{ tasksByUser(userId: \\\"{{userId}}\\\") { id title status } }\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/graphql/graphql/default", "host": ["{{baseUrl}}"], "path": ["graphql", "graphql", "default"] }
+          }
+        },
+        {
+          "name": "Query — Historia zadania",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"query\": \"{ taskHistory(id: \\\"{{taskId}}\\\") { eventType payload occurredAt } }\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/graphql/graphql/default", "host": ["{{baseUrl}}"], "path": ["graphql", "graphql", "default"] }
+          }
+        },
+        {
+          "name": "Mutation — Utwórz zadanie",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.createTask) {",
+                  "    pm.collectionVariables.set('taskId', json.data.createTask.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"query\": \"mutation { createTask(title: \\\"Zadanie GraphQL\\\", description: \\\"Opis\\\") { id title status createdAt } }\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/graphql/graphql/default", "host": ["{{baseUrl}}"], "path": ["graphql", "graphql", "default"] }
+          }
+        },
+        {
+          "name": "Mutation — Zmień status",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"query\": \"mutation { updateTaskStatus(id: \\\"{{taskId}}\\\", status: \\\"in_progress\\\") { id status updatedAt } }\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/graphql/graphql/default", "host": ["{{baseUrl}}"], "path": ["graphql", "graphql", "default"] }
+          }
+        }
+      ]
+    }
+  ]
+}
