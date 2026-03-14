@@ -28,3 +28,11 @@
 # OS
 .DS_Store
 Thumbs.db
+
+# PHPUnit
+.phpunit.result.cache
+
+# Symfony skeleton empty dirs (replaced by src/Infrastructure/)
+/src/Controller/
+/src/Entity/
+/src/Repository/
